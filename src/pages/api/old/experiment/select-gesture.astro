@@ -1,0 +1,12 @@
+---
+import GestureSelection from "../../../../components/old/GestureSelection.js";
+import {selectedGesture} from "../../../../lib/old/state.ts";
+export const partial = true;
+export const prerender = false;
+
+if(Astro.request.method === 'POST') {
+  const formData = await Astro.request.formData();
+  selectedGesture.value = formData.get("gesture")?.toString() || "";
+}
+---
+<GestureSelection />

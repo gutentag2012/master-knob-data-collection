@@ -1,0 +1,21 @@
+---
+import { SerialPort } from "serialport";
+import {selectedKnobPort} from "../../../knob/connection.ts";
+import KnobSelector from "../../../components/old/KnobSelector.js";
+import RecordingButton from "../../../components/old/RecordingButton.js";
+import ExperimentRemarks from "../../../components/old/ExperimentRemarks.js";
+import {currentRunId} from "../../../lib/state.ts";
+
+export const partial = true;
+export const prerender = false;
+
+if (Astro.request.method === "POST") {
+  const formData = await Astro.request.formData();
+  const chosenPath = formData.get("path") as string; // "path" comes from your button's name
+  selectedKnobPort.value = selectedKnobPort.value === chosenPath ? null : chosenPath;
+}
+---
+
+<KnobSelector />
+<RecordingButton hx-swap-oob="true" isRecording={currentRunId.value} disabled={!selectedKnobPort.value} />
+<ExperimentRemarks hx-swap-oob="true" />

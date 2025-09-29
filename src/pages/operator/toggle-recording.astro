@@ -1,0 +1,37 @@
+---
+import KnobPortSelector from "../../components/input/KnobPortSelector.astro";
+import {
+  activeSessionId,
+  currentSessionRecordingTaskId,
+  selectedChildTask,
+  selectedPort
+} from "../../lib/state.ts";
+import InputButtons from "../../components/input/InputButtons.astro";
+import {startRecordingTask, stopRecordingTask} from "../../lib/actions.ts";
+import {getRecordingTasksForSession} from "../../lib/data.ts";
+import { TaskSelector } from "../../components/tasks/TaskSelector";
+export const partial = true
+
+if(Astro.request.method !== 'POST') {
+  return new Response('Method Not Allowed', { status: 405 });
+}
+
+const data = await Astro.request.formData();
+const sessionId = data.get('session_id') as string;
+const currentRecording = currentSessionRecordingTaskId.peek()
+
+const selectedChild = selectedChildTask.peek()
+
+if(!sessionId) {
+  return new Response('No active session selected', { status: 400 });
+}
+if(!selectedChild) {
+  return new Response('No child task selected', { status: 400 });
+}
+
+if(!currentRecording) {
+  currentSessionRecordingTaskId.value = await startRecordingTask(sessionId, selectedChild);
+  console.log("Started recording task", currentSessionRecordingTaskId.value);
+}
+---
+<InputButtons id={sessionId} />

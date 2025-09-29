@@ -9,6 +9,16 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.13.10"
+    "@astrojs/db": "^0.18.0",
+    "@astrojs/react": "^4.3.1",
+    "@preact/signals-core": "^1.12.1",
+    "@tailwindcss/vite": "^4.1.13",
+    "@types/react": "^19.1.13",
+    "@types/react-dom": "^19.1.9",
+    "astro": "^5.13.10",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "serialport": "^13.0.0",
+    "tailwindcss": "^4.1.13"
   }
 }

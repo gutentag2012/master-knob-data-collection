@@ -1,0 +1,28 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+const { id } = Astro.params;
+---
+
+<MainLayout title="Warten auf Operator">
+  <main
+      hx-ext="sse"
+      sse-connect={`/api/sse/participant/${id}`}
+      class="flex h-full flex-col items-center justify-center p-4"
+  >
+    <div sse-swap="session-started">
+      <h1 class="text-2xl font-bold mb-4">Warten auf Operator<span id="dots-loading-indicator"></span></h1>
+      <p>Bitte warten Sie, bis der Operator Ihre Teilnahme bestätigt hat.</p>
+      <p>Ihre Teilnehmer-ID: <strong>{id}</strong></p>
+    </div>
+  </main>
+
+  <script>
+    let dots = 0;
+    setInterval(() => {
+      const indicator = document.getElementById('dots-loading-indicator');
+      if (!indicator) return;
+      dots = (dots + 1) % 4;
+      indicator.textContent = '.'.repeat(dots);
+    }, 500);
+  </script>
+</MainLayout>

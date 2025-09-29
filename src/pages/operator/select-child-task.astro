@@ -1,0 +1,18 @@
+---
+import {selectedParentTask, selectedChildTask} from "../../lib/state.ts";
+import {getRecordingTasksForSession} from "../../lib/data.ts";
+import {TaskSelector} from "../../components/tasks/TaskSelector.tsx";
+import InputButtons from "../../components/input/InputButtons.astro";
+
+export const partial = true
+
+if(Astro.request.method !== 'POST'){
+  return new Response("Method Not Allowed", {status: 405});
+}
+const formData = await Astro.request.formData();
+const sessionId = formData.get('session_id');
+const {session, experiments} = await getRecordingTasksForSession(sessionId)
+selectedChildTask.value = Number(formData.get('task_id'));
+---
+<TaskSelector id={sessionId} experiments={experiments} />
+<InputButtons id={sessionId} oob="true" />

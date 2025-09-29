@@ -1,0 +1,13 @@
+---
+import {currentExperimentId} from "../../lib/old/state.ts";
+const currentExperiment = currentExperimentId.value
+---
+
+<div id="current-experiment-marker" class="flex flex-row gap-1 items-center">
+{!currentExperiment
+  ? <button hx-post="/api/config/start" hx-swap="outerHTML" hx-target="#current-experiment-marker">Start Experiment</button>
+  : (
+    <p>{currentExperiment}</p>
+    <button hx-post="/api/config/stop" hx-swap="outerHTML" hx-target="#current-experiment-marker" class="bg-red-600 text-red-50 px-1 py-0.5 rounded-sm">Stop Experiment</button>
+  )}
+</div>

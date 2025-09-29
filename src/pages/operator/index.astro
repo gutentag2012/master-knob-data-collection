@@ -1,0 +1,54 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+import {SerialPort} from "serialport";
+import KnobPortSelector from "../../components/input/KnobPortSelector.astro";
+---
+
+<MainLayout title="Operator">
+  <div
+        hx-ext="sse"
+        sse-connect="/api/sse/operator"
+        class="h-full"
+  >
+    <header class="flex">
+      <div class="ml-auto text-sm">
+        <p>Participant: <span sse-swap="participant" class="text-xs text-gray-600"></span></p>
+        <p>Connected Port: <span sse-swap="selected-knob-port" class="text-xs text-gray-600"></span></p>
+      </div>
+    </header>
+    <main
+        class="flex h-full flex-col items-center justify-center p-4 gap-4"
+    >
+      <div>
+        <label class="block font-medium text-center" for="knob-port-selector">Select Knob Port:</label>
+        <KnobPortSelector />
+      </div>
+      <div>
+        <label class="block font-medium text-center" for="knob-port-selector">Selected Participant:</label>
+        <p sse-swap="participant"></p>
+      </div>
+      <button
+          id="start-session-button"
+          hx-post="/api/start-session"
+          disabled
+          class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 disabled:opacity-50 cursor-pointer"
+      >
+        Start Session
+      </button>
+      <div class="hidden" sse-swap="can-start-session"></div>
+
+      <script>
+        document.body.addEventListener('htmx:sseMessage', (evt) => {
+          const event = evt as unknown as {detail: {type: string, data: string}}
+          if (event.detail.type !== 'can-start-session') {
+            return
+          }
+          const canStartSession = event.detail.data === 'true'
+          const startButton = document.querySelector('#start-session-button') as HTMLButtonElement | null
+          if (!startButton) return
+          startButton.disabled = !canStartSession
+        });
+      </script>
+    </main>
+  </div>
+</MainLayout>

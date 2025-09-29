@@ -1,0 +1,74 @@
+---
+import {currentSessionRecordingTaskId, markingsForCurrentTask, selectedChildTask} from "../../lib/state.ts";
+
+interface Props {
+  id: string;
+  "oob"?: "true"
+}
+const {id, oob} = Astro.props;
+
+const oobProps = oob === "true" ? { "hx-swap-oob": oob } : {};
+
+const isRecording = !!currentSessionRecordingTaskId.peek()
+---
+<div id="input-buttons" hx-swap="outerHTML" {...oobProps}>
+  <p class="text-lg font-semibold">Recording Controls</p>
+  <button
+      id="toggle-recording-btn"
+      hx-post="/operator/toggle-recording"
+      hx-target="#input-buttons"
+      hx-swap="outerHTML"
+      value={id}
+      name="session_id"
+      class={`text-white px-4 py-2 rounded mr-4  disabled:opacity-50 cursor-pointer bg-indigo-500 hover:bg-indigo-600 ${isRecording ? 'hidden' : ''}`}
+      disabled={!selectedChildTask.peek()}
+  >
+    Start Recording
+  </button><button
+      id="stop-recording-btn"
+      class={`text-white px-4 py-2 rounded mr-4  disabled:opacity-50 cursor-pointer bg-red-500 hover:bg-red-600 ${isRecording ? '' : 'hidden'}`}
+      disabled={!selectedChildTask.peek()}
+  >
+    Stop Recording
+  </button>
+  <p class="text-lg font-semibold">Markers</p>
+  <div>
+    <input type="hidden" name="sessionId" value={id} />
+    <button
+        hx-post="/operator/mark-recording"
+        hx-target="#input-buttons"
+        hx-swap="outerHTML"
+        name="mark"
+        value="pre-start"
+        hx-include="[name='sessionId']"
+        class="bg-emerald-500 text-white px-4 py-2 rounded mr-4 hover:bg-emerald-600 disabled:opacity-50 cursor-pointer"
+        disabled={!selectedChildTask.peek()}
+    >
+      Mark Start
+    </button>
+    <button
+        hx-post="/operator/mark-recording"
+        hx-target="#input-buttons"
+        hx-swap="outerHTML"
+        name="mark"
+        value="marking"
+        hx-include="[name='sessionId']"
+        class="bg-amber-500 text-white px-4 py-2 rounded mr-4 hover:bg-amber-600 disabled:opacity-50 cursor-pointer"
+        disabled={!selectedChildTask.peek()}
+    >
+      Mark
+    </button>
+    <button
+        hx-post="/operator/mark-recording"
+        hx-target="#input-buttons"
+        hx-swap="outerHTML"
+        name="mark"
+        value="end"
+        hx-include="[name='sessionId']"
+        class="bg-fuchsia-500 text-white px-4 py-2 rounded hover:bg-fuchsia-600 disabled:opacity-50 cursor-pointer"
+        disabled={!selectedChildTask.peek()}
+    >
+      Mark End
+    </button>
+  </div>
+</div>

@@ -1,0 +1,38 @@
+---
+import MainLayout from "../../../layouts/MainLayout.astro";
+import {connectedParticipant} from "../../../lib/state.ts";
+import {db, eq, session} from "astro:db";
+const { id } = Astro.params;
+
+const sessionData = await db.select().from(session).where(eq(session.id, id)).limit(1).get();
+---
+<!-- TODO Add proper progress -->
+<MainLayout title={`Experiment ${id}`}>
+  <main
+      hx-ext="sse"
+      sse-connect={`/api/sse/participant/${sessionData?.participant_id}`}
+      class="flex flex-col justify-center items-center h-full gap-4 pb-24"
+  >
+    <div sse-swap="task-selected" class="flex flex-col items-center">
+      <h1 class="text-2xl font-bold mb-4 text-center">Bitte warten Sie...</h1>
+      <p class="text-center">Der Operator hat Ihre Teilnahme bestätigt. In Kürze wird eine Aufgabe präsentiert.</p>
+    </div>
+    <div sse-swap="recording-markers"></div>
+    <script>
+    //   Once htmx is swapped, check if there is a counter id element and count down from 3
+      document.body.addEventListener('htmx:afterSwap', (event) => {
+        const counter = event?.detail?.elt?.querySelector('#countdown');
+        if(!counter) return;
+        let count = 3;
+        counter.textContent = count;
+        const interval = setInterval(() => {
+          count--;
+          counter.textContent = count;
+          if(count <= 0) {
+            clearInterval(interval);
+          }
+        }, 1000);
+      });
+    </script>
+  </main>
+</MainLayout>

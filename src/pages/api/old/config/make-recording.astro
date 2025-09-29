@@ -1,0 +1,21 @@
+---
+import {selectedKnobPort} from "../../../knob/connection.ts";
+import RecordingButton from "../../../components/old/RecordingButton.js";
+import {createExperimentRun, currentRunId, endExperimentRun} from "../../../lib/state.ts";
+import GestureSelection from "../../../components/old/GestureSelection.js";
+
+export const partial = true;
+export const prerender = false;
+
+if(Astro.request.method === 'POST') {
+  const isCurrentlyRecording = !!currentRunId.value;
+  if(!isCurrentlyRecording) {
+    await createExperimentRun()
+  } else {
+    await endExperimentRun()
+  }
+}
+---
+
+<RecordingButton isRecording={currentRunId.value} disabled={!selectedKnobPort.value} />
+<GestureSelection hx-swap-oob="true" />

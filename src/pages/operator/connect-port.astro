@@ -1,0 +1,15 @@
+---
+import KnobPortSelector from "../../components/input/KnobPortSelector.astro";
+import {selectedPort} from "../../lib/state.ts";
+export const partial = true
+
+if(Astro.request.method !== 'POST') {
+  return new Response('Method Not Allowed', { status: 405 });
+}
+
+const data = await Astro.request.formData();
+const portToSelect = data.get('port') as string || null;
+
+selectedPort.value = portToSelect === selectedPort.peek() ? null : portToSelect;
+---
+<KnobPortSelector />

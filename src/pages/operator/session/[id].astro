@@ -1,0 +1,172 @@
+---
+import MainLayout from "../../../layouts/MainLayout.astro";
+import {TaskSelector} from "../../../components/tasks/TaskSelector.tsx";
+import {db, eq, session, sessionTask, recordingTask, isNull, asc} from "astro:db";
+import {GESTURE_HIERARCHY, GESTURE_NAME_LIST} from "../../../lib/constants.ts";
+import {selectedParentTask, selectedChildTask} from "../../../lib/state.ts";
+import {getRecordingTasksForSession} from "../../../lib/data.ts";
+import InputButtons from "../../../components/input/InputButtons.astro";
+const {id} = Astro.params;
+
+const {session, experiments} = await getRecordingTasksForSession(id)
+---
+
+<MainLayout title={`Experiment ${id}`}>
+  <div
+      hx-ext="sse"
+      sse-connect="/api/sse/operator"
+      class="h-full"
+  >
+    <header class="flex">
+      <div class="ml-auto text-sm">
+        <p>Session: <span class="text-xs text-gray-600">{session?.id}</span></p>
+        <p>Participant: <span class="text-xs text-gray-600">{session?.participant_id}</span></p>
+        <p class="opacity-25">Connected: <span
+            sse-swap="participant"
+            class="text-xs text-gray-600"
+        ></span></p>
+        <p>Connected Port: <span
+            sse-swap="selected-knob-port"
+            class="text-xs text-gray-600"
+        ></span></p>
+      </div>
+    </header>
+    <main>
+      <TaskSelector id={id} experiments={experiments} />
+      <video
+          id="participant-video"
+          autoplay
+          muted class="w-full h-96 bg-gray-200 rounded my-8"
+      />
+      <InputButtons id={id} />
+    </main>
+  </div>
+
+  <script>
+    const videoElement = document.getElementById("participant-video") as HTMLVideoElement | null;
+
+    let mediaRecorder: MediaRecorder | null = null;
+    let recordedChunks = [] as Array<BlobPart>;
+    let stream: MediaStream | null = null; // Store stream globally/in scope to stop tracks later
+
+    function getSupportedMimeType() {
+      const types = [
+        'video/webm; codecs=vp9,opus', // High quality, modern
+        'video/webm; codecs=vp8,opus', // Good fallback
+        'video/webm', // Generic WebM
+        'video/mp4' // If you want MP4 (less common for recorder)
+      ];
+
+      for (const type of types) {
+        if (MediaRecorder.isTypeSupported(type)) {
+          return type;
+        }
+      }
+      // Fallback if no specific type is supported (unlikely)
+      return 'video/webm';
+    }
+
+    async function startRecording() {
+      if (!videoElement) return;
+      stream = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
+      videoElement.srcObject = stream;
+      await videoElement.play();
+
+      try {
+        // 3. Initialize MediaRecorder with the stream (which includes both tracks)
+        // You can specify the MIME type if needed, e.g., 'video/webm; codecs=vp9,opus'
+        const mimeType = getSupportedMimeType();
+        console.log("Using MIME type for recording:", mimeType);
+        mediaRecorder = new MediaRecorder(stream, { mimeType });
+
+        mediaRecorder.ondataavailable = (event) => {
+          // Data is correctly pushed to the array, which will include audio data
+          if (event.data.size > 0) recordedChunks.push(event.data);
+        };
+
+        mediaRecorder.start();
+        console.log("Recording started.");
+      } catch (error: any) {
+        // Handle permissions denial or device issues gracefully
+        console.error("Error accessing media devices:", error);
+        alert(`Could not start recording. Please check your camera/microphone permissions. Error: ${error?.name}`);
+      }
+    }
+
+    /**
+     * Stops the recorder, handles the data, and uploads the video/audio blob.
+     */
+    async function stopRecording() {
+      if(!mediaRecorder || mediaRecorder.state === 'inactive') {
+        await fetch("/api/force-stop", {
+          method: "POST",
+        });
+        return;
+      }
+
+      // Stop all tracks to release camera and microphone
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        stream = null;
+      }
+
+      mediaRecorder.onstop = async () => {
+        // 1. Create the Blob (includes video and audio)
+        const blob = new Blob(recordedChunks, {type: "video/webm"});
+        console.log("Recording stopped. Blob size:", blob.size);
+
+        // 2. Prepare for upload
+        const formData = new FormData();
+        formData.append("video", blob, "recording.webm");
+
+        // 3. Upload
+        try {
+          const response = await fetch("/api/upload-video", {
+            method: "POST",
+            body: formData,
+          });
+
+          if (response.ok) {
+            console.log("Video and Audio uploaded successfully!");
+            recordedChunks = [];
+          } else {
+            console.error("Upload failed with status:", response.status);
+          }
+        } catch (e) {
+          console.error("Error during upload:", e);
+        }
+      };
+
+      mediaRecorder.stop();
+      console.log("Recording stopping...");
+
+      const toggleButton = document.getElementById("toggle-recording-btn");
+      if (toggleButton) {
+        toggleButton.removeAttribute("hx-disable")
+      }
+    }
+
+    /**
+     * Attaches event listeners to the buttons.
+     */
+    async function addListeners() {
+      const startRecordingButton = document.getElementById("toggle-recording-btn");
+      const stopRecordingButton = document.getElementById("stop-recording-btn");
+      if (!startRecordingButton || !stopRecordingButton) return;
+
+      startRecordingButton.onclick = async () => {
+        await startRecording();
+        startRecordingButton.classList.add("hidden");
+        stopRecordingButton.classList.remove("hidden");
+      };
+      stopRecordingButton.onclick = async () => {
+        await stopRecording();
+        stopRecordingButton.classList.add("hidden");
+        startRecordingButton.classList.remove("hidden");
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", addListeners);
+    document.addEventListener("htmx:afterSwap", addListeners);
+  </script>
+</MainLayout>

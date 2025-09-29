@@ -1,0 +1,29 @@
+---
+import {selectedKnobPort} from "../../knob/connection.ts";
+import {SerialPort} from "serialport";
+import {selectedPort} from "../../lib/state.ts";
+
+const availablePorts = await SerialPort.list();
+---
+
+<div
+    id="knob-port-selector"
+    class="flex flex-wrap justify-center"
+>
+  {availablePorts.map(port => (
+      <button
+          class={[
+            "text-white rounded px-2 py-1 m-1 cursor-pointer text-sm",
+            selectedPort.peek() === port.path ? "bg-blue-600" : "bg-gray-800"
+          ].join(" ")}
+          hx-post="/operator/connect-port"
+          hx-include="this"
+          hx-swap="outerHTML"
+          hx-target="#knob-port-selector"
+          name="port"
+          value={port.path}
+      >
+        {port.path} - {port.manufacturer ?? "Unknown Manufacturer"}
+      </button>
+  ))}
+</div>

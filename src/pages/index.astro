@@ -1,16 +1,67 @@
 ---
-
+import MainLayout from "../layouts/MainLayout.astro";
+import OptionSlider from "../components/input/OptionSlider.astro";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<MainLayout title="Willkommen">
+  <main class="flex h-full flex-col justify-center items-center">
+    <h1 class="text-4xl font-bold mb-4">Willkommen zur Datensammlung</h1>
+    <p class="text-lg mb-8 text-center">Bitte füllen Sie die folgenden Felder aus, um die Datensammlung zu starten.</p>
+
+    <form
+        hx-post="/api/create-participant"
+        class="flex flex-col gap-2 max-w-md w-full"
+    >
+      <div>
+        <label for="age" class="block text-lg font-medium mb-2">Alter:</label>
+        <input type="number" id="age" name="age" class="border border-gray-300 rounded px-3 py-2 w-full" required />
+      </div>
+      <div>
+        <label for="gender" class="block text-lg font-medium mb-2">Geschlecht:</label>
+        <select id="gender" name="gender" class="border border-gray-300 rounded px-3 py-2 w-full" required>
+          <option value="" disabled selected>Bitte wählen</option>
+          <option value="male">Männlich</option>
+          <option value="female">Weiblich</option>
+          <option value="other">Divers</option>
+        </select>
+      </div>
+      <div>
+        <label for="dominant_hand" class="block text-lg font-medium mb-2">Dominante Hand:</label>
+        <select id="dominant_hand" name="dominant_hand" class="border border-gray-300 rounded px-3 py-2 w-full" required>
+          <option value="" disabled selected>Bitte wählen</option>
+          <option value="right">Rechts</option>
+          <option value="left">Links</option>
+          <option value="ambidextrous">Beidhändig</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-lg font-medium mb-2">Handmaße</label>
+        <div class="flex flex-row gap-2 items-center">
+          <div class="flex-1">
+            <label for="hand_span_cm" class="block mb-1">Handspanne (cm):</label>
+            <input type="number" id="hand_span_cm" name="hand_span_cm" class="border border-gray-300 rounded px-3 py-2 w-full" required />
+          </div>
+          <div class="flex-1">
+            <label for="hand_length_cm" class="block mb-1">Handlänge (cm):</label>
+            <input type="number" id="hand_length_cm" name="hand_length_cm" class="border border-gray-300 rounded px-3 py-2 w-full" required />
+          </div>
+        </div>
+        <div class="flex-1">
+          <label for="hand_width_cm" class="block mb-1">Handbreite (cm):</label>
+          <input type="number" id="hand_width_cm" name="hand_width_cm" class="border border-gray-300 rounded px-3 py-2 w-full" required />
+        </div>
+      </div>
+      <div>
+        <label class="block text-lg font-medium mb-2">Erfahrung</label>
+        <div class="flex flex-col gap-2">
+          <OptionSlider name="experience_with_touchscreens" label="Erfahrung mit Touchscreens:" />
+          <OptionSlider name="experience_with_knobs" label="Erfahrung mit Drehknöpfen:" />
+          <OptionSlider name="experience_with_gestures" label="Erfahrung mit Gesten:" />
+          <OptionSlider name="experience_with_other_input_devices" label="Erfahrung mit anderen Eingabegeräten:" />
+          <OptionSlider name="regular_use_of_input_devices" label="Regelmäßige Nutzung von Eingabegeräten:" />
+        </div>
+      </div>
+      <button type="submit" class="mt-4 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 cursor-pointer">Versuch starten</button>
+    </form>
+  </main>
+</MainLayout>

@@ -1,0 +1,41 @@
+---
+import type {APIRoute} from "astro";
+import {createParticipant, markRecordingTask, startSession} from "../../lib/actions.ts";
+import {
+  activeSessionId,
+  connectedParticipant,
+  currentSessionRecordingTaskId,
+  markingsForCurrentTask
+} from "../../lib/state.ts";
+import InputButtons from "../../components/input/InputButtons.astro";
+import {getRecordingTasksForSession} from "../../lib/data.ts";
+import { TaskSelector } from "../../components/tasks/TaskSelector";
+
+if(Astro.request.method !== 'POST'){
+  return new Response("Method Not Allowed", {status: 405});
+}
+
+const activeRecording = currentSessionRecordingTaskId.value
+if(!activeRecording) {
+  return new Response("Cannot mark session while none is active", {status: 400})
+}
+
+const body = await Astro.request.formData()
+const sessionId = body.get("sessionId") as string
+if(!sessionId) {
+  return new Response("Missing sessionId", {status: 400})
+}
+
+const mark = body.get("mark")
+if(mark !== "pre-start" && mark !== "start" && mark !== "end" && mark !== "marking") {
+  return new Response("Invalid mark value", {status: 400})
+}
+
+await markRecordingTask(activeRecording, mark)
+markingsForCurrentTask.value = [...markingsForCurrentTask.value, mark]
+
+const {session, experiments} = await getRecordingTasksForSession(sessionId)
+---
+
+<InputButtons id={sessionId} />
+<TaskSelector id={sessionId} experiments={experiments} oob={true} />
