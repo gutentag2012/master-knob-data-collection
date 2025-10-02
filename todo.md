@@ -1,13 +1,3 @@
-- add new pinch variant 0 fingers
-- markings are not shown for multiple sub tasks (6 green if new subtask)
-- show countdown in admin as well
 - very slow after longer recordings
-- ende auf knopf auch raus
-- kein countdown, nur ein recording now fenster basically
-- 4 finger opposite mit daumen und zeige mit mittel dran
-- beschreibung gesten anpassen
-- maybe immer nur 2 varianten
-- maybe store video continues ly
-- spread 5 finger + 0 finger
-- scenario descriptions
 - knopf festkleben
+- neue videos aufnehmen

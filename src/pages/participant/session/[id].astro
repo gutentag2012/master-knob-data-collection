@@ -18,21 +18,5 @@ const sessionData = await db.select().from(session).where(eq(session.id, id)).li
       <p class="text-center">Der Operator hat Ihre Teilnahme bestätigt. In Kürze wird eine Aufgabe präsentiert.</p>
     </div>
     <div sse-swap="recording-markers"></div>
-    <script>
-    //   Once htmx is swapped, check if there is a counter id element and count down from 3
-      document.body.addEventListener('htmx:afterSwap', (event) => {
-        const counter = event?.detail?.elt?.querySelector('#countdown');
-        if(!counter) return;
-        let count = 3;
-        counter.textContent = count;
-        const interval = setInterval(() => {
-          count--;
-          counter.textContent = count;
-          if(count <= 0) {
-            clearInterval(interval);
-          }
-        }, 1000);
-      });
-    </script>
   </main>
 </MainLayout>

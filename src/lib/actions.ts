@@ -66,7 +66,7 @@ export async function stopRecordingTask(sessionTaskId: string, uploadPath: strin
   }).where(eq(sessionTask.id, sessionTaskId))
 }
 
-export async function markRecordingTask(sessionTaskId: string, marker: "pre-start" | "start" | "end" | "marking") {
+export async function markRecordingTask(sessionTaskId: string, marker: "start" | "end" | "marking") {
   const id = crypto.randomUUID()
   if(marker === "end") {
     await db.update(sessionTask).set({

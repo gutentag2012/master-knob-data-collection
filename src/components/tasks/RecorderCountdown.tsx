@@ -18,8 +18,8 @@ export function RecorderCountdown({withCountdown, markers, amountOfRecordings}: 
     if(i === markerSummary.ended && markerSummary.isStarted) return 0
     return -1
   })
-  return (<div>
-    {withCountdown && <p id="countdown">3</p>}
+  return (<div className="flex flex-col items-center">
+    {markerSummary.isStarted && <p className="text-lg mb-2 font-semibold text-emerald-600">Aufnahme läuft...</p>}
     <div>
       {recordingsToMap.map((state, i) => {
         if(state === 1) return <span key={i} className="text-green-500 font-bold">● </span>

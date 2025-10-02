@@ -38,7 +38,6 @@ const sessionTasks = await db.select().from(sessionTask)
       <button
           id="start-session-button"
           hx-post="/api/start-session"
-          disabled
           class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 disabled:opacity-50 cursor-pointer"
       >
         Start Session
@@ -46,16 +45,16 @@ const sessionTasks = await db.select().from(sessionTask)
       <div class="hidden" sse-swap="can-start-session"></div>
 
       <script>
-        document.body.addEventListener('htmx:sseMessage', (evt) => {
-          const event = evt as unknown as {detail: {type: string, data: string}}
-          if (event.detail.type !== 'can-start-session') {
-            return
-          }
-          const canStartSession = event.detail.data === 'true'
-          const startButton = document.querySelector('#start-session-button') as HTMLButtonElement | null
-          if (!startButton) return
-          startButton.disabled = !canStartSession
-        });
+       // document.body.addEventListener('htmx:sseMessage', (evt) => {
+       //   const event = evt as unknown as {detail: {type: string, data: string}}
+       //   if (event.detail.type !== 'can-start-session') {
+       //     return
+       //   }
+       //   const canStartSession = event.detail.data === 'true'
+       //   const startButton = document.querySelector('#start-session-button') as HTMLButtonElement | null
+       //   if (!startButton) return
+       //   startButton.disabled = !canStartSession
+       // });
       </script>
     </main>
   </div>

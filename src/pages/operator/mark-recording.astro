@@ -27,7 +27,7 @@ if(!sessionId) {
 }
 
 const mark = body.get("mark")
-if(mark !== "pre-start" && mark !== "start" && mark !== "end" && mark !== "marking") {
+if(mark !== "start" && mark !== "end" && mark !== "marking") {
   return new Response("Invalid mark value", {status: 400})
 }
 

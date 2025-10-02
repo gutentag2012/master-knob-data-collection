@@ -37,17 +37,10 @@ export const GET: APIRoute = ({request}) => {
       }))
       effectsToCancel.add(effect(() => {
         const markers = markingsForCurrentTask.value
-        const lastMarker = markers[markers.length - 1]
-        if(lastMarker === "pre-start") {
-          controller.enqueue(encoder.encode(`event: recording-markers\ndata: ${getRecorderCountdown({withCountdown: true, markers, amountOfRecordings: requiredRecordingsForCurrentTask.peek()})}\n\n`))
-          return
-        }
-        controller.enqueue(encoder.encode(`event: recording-markers\ndata: ${getRecorderCountdown({markers: markingsForCurrentTask.peek(), amountOfRecordings: requiredRecordingsForCurrentTask.peek()})}\n\n`))
-      }))
-      effectsToCancel.add(effect(() => {
-        const activeRecording = currentSessionRecordingTaskId.value
-        if(!activeRecording) return;
-        controller.enqueue(encoder.encode(`event: recording-markers\ndata: ${getRecorderCountdown({markers: markingsForCurrentTask.peek(), amountOfRecordings: requiredRecordingsForCurrentTask.peek()})}\n\n`))
+        const amountOfRecordings = requiredRecordingsForCurrentTask.value
+        const activeChildTask = selectedChildTask.value
+        if(!activeChildTask) return;
+        controller.enqueue(encoder.encode(`event: recording-markers\ndata: ${getRecorderCountdown({markers, amountOfRecordings})}\n\n`))
       }))
       effectsToCancel.add(effect(() => {
         const activeTask = selectedParentTask.value

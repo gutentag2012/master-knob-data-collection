@@ -1,6 +1,7 @@
 import type {APIRoute} from "astro";
 import {effect} from "@preact/signals-core";
-import {canStartSession, connectedParticipant, selectedPort} from "../../../lib/state.ts";
+import {canStartSession, connectedParticipant, markingsForCurrentTask, requiredRecordingsForCurrentTask, selectedPort} from "../../../lib/state.ts";
+import { getRecorderCountdown } from "../../../lib/componentStrings.tsx";
 
 export const GET: APIRoute = () => {
   const effectsToCancel = new Set<() => void>()
@@ -20,6 +21,9 @@ export const GET: APIRoute = () => {
       effectsToCancel.add(effect(() => {
         const canStart = canStartSession.value
         controller.enqueue(encoder.encode(`event: can-start-session\ndata: ${canStart}\n\n`))
+      }))
+      effectsToCancel.add(effect(() => {
+        controller.enqueue(encoder.encode(`event: recording-markers\ndata: ${getRecorderCountdown({markers: markingsForCurrentTask.value, amountOfRecordings: requiredRecordingsForCurrentTask.peek()})}\n\n`))
       }))
     },
     cancel() {

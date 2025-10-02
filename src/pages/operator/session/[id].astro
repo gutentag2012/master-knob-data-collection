@@ -38,6 +38,7 @@ const {session, experiments} = await getRecordingTasksForSession(id)
           autoplay
           muted class="w-full h-96 bg-gray-200 rounded my-8"
       />
+      <div sse-swap="recording-markers"></div>
       <InputButtons id={id} />
     </main>
   </div>
@@ -45,6 +46,7 @@ const {session, experiments} = await getRecordingTasksForSession(id)
   <script>
     const videoElement = document.getElementById("participant-video") as HTMLVideoElement | null;
 
+    const CHUNK_INTERVAL = 5000; // 5 seconds
     let mediaRecorder: MediaRecorder | null = null;
     let recordedChunks = [] as Array<BlobPart>;
     let stream: MediaStream | null = null; // Store stream globally/in scope to stop tracks later
@@ -81,15 +83,36 @@ const {session, experiments} = await getRecordingTasksForSession(id)
 
         mediaRecorder.ondataavailable = (event) => {
           // Data is correctly pushed to the array, which will include audio data
-          if (event.data.size > 0) recordedChunks.push(event.data);
+          if (event.data.size > 0) uploadChunk(event.data);
         };
 
-        mediaRecorder.start();
+        mediaRecorder.start(CHUNK_INTERVAL); // Collect data in chunks every 5 seconds
         console.log("Recording started.");
       } catch (error: any) {
         // Handle permissions denial or device issues gracefully
         console.error("Error accessing media devices:", error);
         alert(`Could not start recording. Please check your camera/microphone permissions. Error: ${error?.name}`);
+      }
+    }
+
+    async function uploadChunk(chunk: Blob) {
+      console.log("Uploading chunk of size:", chunk.size);
+      const formData = new FormData();
+      formData.append("videoChunk", chunk, `chunk-${Date.now()}.webm`);
+
+      try {
+        const response = await fetch("/api/upload-chunk", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (response.ok) {
+          console.log("Chunk uploaded successfully.");
+        } else {
+          console.error("Chunk upload failed with status:", response.status);
+        }
+      } catch (e) {
+        console.error("Error during chunk upload:", e);
       }
     }
 
@@ -109,33 +132,6 @@ const {session, experiments} = await getRecordingTasksForSession(id)
         stream.getTracks().forEach(track => track.stop());
         stream = null;
       }
-
-      mediaRecorder.onstop = async () => {
-        // 1. Create the Blob (includes video and audio)
-        const blob = new Blob(recordedChunks, {type: "video/webm"});
-        console.log("Recording stopped. Blob size:", blob.size);
-
-        // 2. Prepare for upload
-        const formData = new FormData();
-        formData.append("video", blob, "recording.webm");
-
-        // 3. Upload
-        try {
-          const response = await fetch("/api/upload-video", {
-            method: "POST",
-            body: formData,
-          });
-
-          if (response.ok) {
-            console.log("Video and Audio uploaded successfully!");
-            recordedChunks = [];
-          } else {
-            console.error("Upload failed with status:", response.status);
-          }
-        } catch (e) {
-          console.error("Error during upload:", e);
-        }
-      };
 
       mediaRecorder.stop();
       console.log("Recording stopping...");

@@ -35,28 +35,11 @@ effect(() => {
     markingsForCurrentTask.value = []
     return
   }
+  console.log("Fetching markers for task:", taskId)
   db.select().from(sessionTask).leftJoin(sessionTaskMarker, eq(sessionTaskMarker.session_task_id, sessionTask.id)).where(eq(sessionTask.session_id, activeSessionId.peek()!)).then(markers => {
-    markingsForCurrentTask.value = markers.map(m => m.sessionTaskMarker?.marker).filter(Boolean) as string[]
+    console.log("Found markers for task:", markers)
+    markingsForCurrentTask.value = [...markers].map(m => m.sessionTaskMarker?.marker).filter(Boolean) as string[]
   })
-})
-
-let previousMarkingsForCurrentTask: string[] = []
-effect(() => {
-  const currentMarkings = markingsForCurrentTask.value
-  if(currentMarkings.length > previousMarkingsForCurrentTask.length) {
-    const newMarker = currentMarkings[currentMarkings.length - 1]
-
-    if(newMarker === "pre-start") {
-      const sessionToMark = currentSessionRecordingTaskId.peek()
-      if(!sessionToMark) return;
-      const timeout = setTimeout(async () => {
-        console.log("Trying to mark start")
-        await markRecordingTask(sessionToMark, "start")
-        markingsForCurrentTask.value = [...markingsForCurrentTask.value, "start"]
-      }, 3000)
-      return () => clearTimeout(timeout)
-    }
-  }
 })
 
 export const canStartSession = computed(() => {
