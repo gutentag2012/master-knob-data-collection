@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@astrojs/db": "^0.18.0",
+    "@astrojs/node": "^9.4.4",
     "@astrojs/react": "^4.3.1",
     "@preact/signals-core": "^1.12.1",
     "@tailwindcss/vite": "^4.1.13",

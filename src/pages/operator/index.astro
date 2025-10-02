@@ -2,6 +2,10 @@
 import MainLayout from "../../layouts/MainLayout.astro";
 import {SerialPort} from "serialport";
 import KnobPortSelector from "../../components/input/KnobPortSelector.astro";
+import {db, session, sessionTask} from "astro:db";
+
+const sessions = await db.select().from(session)
+const sessionTasks = await db.select().from(sessionTask)
 ---
 
 <MainLayout title="Operator">
@@ -19,6 +23,10 @@ import KnobPortSelector from "../../components/input/KnobPortSelector.astro";
     <main
         class="flex h-full flex-col items-center justify-center p-4 gap-4"
     >
+      <div>
+        <p class="block font-medium text-center">Past Sessions: {sessions.length}</p>
+        <p class="text-sm text-gray-600 italic text-center">Total Tasks Recorded: {sessionTasks.length}</p>
+      </div>
       <div>
         <label class="block font-medium text-center" for="knob-port-selector">Select Knob Port:</label>
         <KnobPortSelector />

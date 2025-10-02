@@ -47,7 +47,7 @@ const setup = () => {
       if(!port) return;
       console.log("Port opened, configuring device...");
       // Turn on the device
-      writePacket(SenderProtocol.getMotorConfigurationCommand(TouchCount.ALL, 50, MotorConfiguration.SNAPS_OPEN, 12))
+      writePacket(SenderProtocol.getMotorConfigurationCommand(TouchCount.ALL, 50, MotorConfiguration.SNAPS_OPEN, 24))
       writePacket(SenderProtocol.getSenderFormatCommand(Object.values(SenderFormat), TouchFormat.RELATIVE_POSITION_PRESSURE_CHANNELS))
       writePacket(SenderProtocol.getOnOffCommand(true))
     })
@@ -95,10 +95,11 @@ const setup = () => {
           }
           lastData = {...parsedData};
 
+          const id = crypto.randomUUID();
           const runId = currentSessionRecordingTaskId.peek();
           if (runId) {
             await db.insert(sensorData).values({
-              id: crypto.randomUUID(),
+              id,
               session_task_id: runId,
               motor_angle: parsedData.motorAngle,
               motor_angle_delta: parsedData.motorAngleDelta,
@@ -130,7 +131,13 @@ const setup = () => {
               touch_5_channel: parsedData.touches[4]?.channel ?? null,
               other_touches: parsedData.touches.length <= 5 ? null : JSON.stringify(parsedData.touches.slice(5)),
             }).catch(e => {
-              console.error("Failed to insert sensor data:", e);
+              const debugData = {
+                runId,
+                id,
+                parsedData,
+                lastData,
+              }
+              console.error("Failed to insert sensor data:", debugData, e);
             })
           }
         } catch (e: any) {

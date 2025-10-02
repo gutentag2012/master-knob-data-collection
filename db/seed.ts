@@ -1,5 +1,7 @@
 import {db, recordingTask} from 'astro:db';
 
+console.log(import.meta.env.ASTRO_DB_REMOTE_URL)
+
 export default async function seed() {
   const singleTap = await db.insert(recordingTask).values({
     title: "Single Tap",
@@ -13,7 +15,7 @@ export default async function seed() {
       parent_id: singleTap.lastInsertRowid ? Number(singleTap.lastInsertRowid) : undefined,
       required_repetitions: 6,
       gesture: "single-tap-4-fingers",
-      explanation_video_path: "/videos/single-tap-4-fingers.mp4"
+      explanation_video_path: "/videos/single_tap_(4_finger).webm"
     },
     {
       title: "Single Tap (4 Finger, Luft)",
@@ -21,7 +23,7 @@ export default async function seed() {
       parent_id: singleTap.lastInsertRowid ? Number(singleTap.lastInsertRowid) : undefined,
       required_repetitions: 6,
       gesture: "single-tap-4-fingers-air",
-      explanation_video_path: "/videos/single-tap-4-fingers-air.mp4"
+      explanation_video_path: "/videos/single_tap_(4_finger,_luft).webm"
     },
     {
       title: "Single Tap (3 Finger)",
@@ -29,7 +31,7 @@ export default async function seed() {
       parent_id: singleTap.lastInsertRowid ? Number(singleTap.lastInsertRowid) : undefined,
       required_repetitions: 6,
       gesture: "single-tap-3-fingers",
-      explanation_video_path: "/videos/single-tap-3-fingers.mp4"
+      explanation_video_path: "/videos/single_tap_(3_finger).webm"
     }
   ])
 
@@ -45,7 +47,7 @@ export default async function seed() {
       parent_id: doubleTap.lastInsertRowid ? Number(doubleTap.lastInsertRowid) : undefined,
       required_repetitions: 6,
       gesture: "double-tap-4-fingers",
-      explanation_video_path: "/videos/double-tap-4-fingers.mp4"
+      explanation_video_path: "/videos/double_tap_(4_finger).webm"
     },
     {
       title: "Double Tap (4 Finger, Luft)",
@@ -53,7 +55,7 @@ export default async function seed() {
       parent_id: doubleTap.lastInsertRowid ? Number(doubleTap.lastInsertRowid) : undefined,
       required_repetitions: 6,
       gesture: "double-tap-4-fingers-air",
-      explanation_video_path: "/videos/double-tap-4-fingers-air.mp4"
+      explanation_video_path: "/videos/double_tap_(4_finger,_luft).webm"
     },
     {
       title: "Double Tap (3 Finger)",
@@ -61,7 +63,7 @@ export default async function seed() {
       parent_id: doubleTap.lastInsertRowid ? Number(doubleTap.lastInsertRowid) : undefined,
       required_repetitions: 6,
       gesture: "double-tap-3-fingers",
-      explanation_video_path: "/videos/double-tap-3-fingers.mp4"
+      explanation_video_path: "/videos/double_tap_(3_finger).webm"
     },
     {
       title: "Double Tap (3 Finger, Ende auf Knopf)",
@@ -69,7 +71,7 @@ export default async function seed() {
       parent_id: doubleTap.lastInsertRowid ? Number(doubleTap.lastInsertRowid) : undefined,
       required_repetitions: 6,
       gesture: "double-tap-3-fingers-end-ground",
-      explanation_video_path: "/videos/double-tap-3-fingers-end-ground.mp4"
+      explanation_video_path: "/videos/double_tap_(3_finger,_ende_auf_knopf).webm"
     }
   ])
 
@@ -85,7 +87,7 @@ export default async function seed() {
       parent_id: twoFingerTap.lastInsertRowid ? Number(twoFingerTap.lastInsertRowid) : undefined,
       required_repetitions: 6,
       gesture: "two-finger-tap-4-fingers",
-      explanation_video_path: "/videos/two-finger-tap-4-fingers.mp4"
+      explanation_video_path: "/videos/two-finger_tap_(4_finger).webm"
     },
     {
       title: "Two-Finger Tap (3 Finger)",
@@ -93,7 +95,7 @@ export default async function seed() {
       parent_id: twoFingerTap.lastInsertRowid ? Number(twoFingerTap.lastInsertRowid) : undefined,
       required_repetitions: 6,
       gesture: "two-finger-tap-3-fingers",
-      explanation_video_path: "/videos/two-finger-tap-3-fingers.mp4"
+      explanation_video_path: "/videos/two-finger_tap_(3_finger).webm"
     }
   ])
 
@@ -109,7 +111,7 @@ export default async function seed() {
       parent_id: twoFingerDoubleTap.lastInsertRowid ? Number(twoFingerDoubleTap.lastInsertRowid) : undefined,
       required_repetitions: 6,
       gesture: "two-finger-double-tap-4-fingers",
-      explanation_video_path: "/videos/two-finger-double-tap-4-fingers.mp4"
+      explanation_video_path: "/videos/two-finger_double_tap_(4_finger).webm"
     },
     {
       title: "Two-Finger Double Tap (3 Finger)",
@@ -117,7 +119,7 @@ export default async function seed() {
       parent_id: twoFingerDoubleTap.lastInsertRowid ? Number(twoFingerDoubleTap.lastInsertRowid) : undefined,
       required_repetitions: 6,
       gesture: "two-finger-double-tap-3-fingers",
-      explanation_video_path: "/videos/two-finger-double-tap-3-fingers.mp4"
+      explanation_video_path: "/videos/two-finger_double_tap_(3_finger).webm"
     }
   ])
 
@@ -133,7 +135,7 @@ export default async function seed() {
       parent_id: twoFingerOppositeTap.lastInsertRowid ? Number(twoFingerOppositeTap.lastInsertRowid) : undefined,
       required_repetitions: 6,
       gesture: "two-finger-opposite-tap-4-fingers",
-      explanation_video_path: "/videos/two-finger-opposite-tap-4-fingers.mp4"
+      explanation_video_path: "/videos/two-finger_opposite_tap_(4_finger).webm"
     },
     {
       title: "Two-Finger Opposite Tap (All Air)",
@@ -141,7 +143,7 @@ export default async function seed() {
       parent_id: twoFingerOppositeTap.lastInsertRowid ? Number(twoFingerOppositeTap.lastInsertRowid) : undefined,
       required_repetitions: 6,
       gesture: "two-finger-opposite-tap-all-air",
-      explanation_video_path: "/videos/two-finger-opposite-tap-all-air.mp4"
+      explanation_video_path: "/videos/two-finger_opposite_tap_(all_air).webm"
     }
   ])
 
@@ -157,7 +159,7 @@ export default async function seed() {
       parent_id: twoFingerOppositeDoubleTap.lastInsertRowid ? Number(twoFingerOppositeDoubleTap.lastInsertRowid) : undefined,
       required_repetitions: 6,
       gesture: "two-finger-opposite-double-tap-4-fingers",
-      explanation_video_path: "/videos/two-finger-opposite-double-tap-4-fingers.mp4"
+      explanation_video_path: "/videos/two-finger_opposite_double_tap_(4_finger).webm"
     },
     {
       title: "Two-Finger Opposite Double Tap (4 Finger, Ende auf Knopf)",
@@ -165,7 +167,7 @@ export default async function seed() {
       parent_id: twoFingerOppositeDoubleTap.lastInsertRowid ? Number(twoFingerOppositeDoubleTap.lastInsertRowid) : undefined,
       required_repetitions: 6,
       gesture: "two-finger-opposite-double-tap-4-fingers-end-ground",
-      explanation_video_path: "/videos/two-finger-opposite-double-tap-4-fingers-end-ground.mp4"
+      explanation_video_path: "/videos/two-finger_opposite_double_tap_(4_finger,_ende_auf_knopf).webm"
     },
     {
       title: "Two-Finger Opposite Double Tap (All Air)",
@@ -173,7 +175,7 @@ export default async function seed() {
       parent_id: twoFingerOppositeDoubleTap.lastInsertRowid ? Number(twoFingerOppositeDoubleTap.lastInsertRowid) : undefined,
       required_repetitions: 6,
       gesture: "two-finger-opposite-double-tap-all-air",
-      explanation_video_path: "/videos/two-finger-opposite-double-tap-all-air.mp4"
+      explanation_video_path: "/videos/two-finger_opposite_double_tap_(all_air).webm"
     }
   ])
 
@@ -189,7 +191,7 @@ export default async function seed() {
       parent_id: tapAndHold.lastInsertRowid ? Number(tapAndHold.lastInsertRowid) : undefined,
       required_repetitions: 6,
       gesture: "tap-and-hold-2-fingers",
-      explanation_video_path: "/videos/tap-and-hold-2-fingers.mp4"
+      explanation_video_path: "/videos/tap_and_hold_(2_finger).webm"
     },
     {
       title: "Tap and Hold (3 Finger)",
@@ -197,7 +199,7 @@ export default async function seed() {
       parent_id: tapAndHold.lastInsertRowid ? Number(tapAndHold.lastInsertRowid) : undefined,
       required_repetitions: 6,
       gesture: "tap-and-hold-3-fingers",
-      explanation_video_path: "/videos/tap-and-hold-3-fingers.mp4"
+      explanation_video_path: "/videos/tap_and_hold_(3_finger).webm"
     },
     {
       title: "Tap and Hold (4 Finger)",
@@ -205,7 +207,7 @@ export default async function seed() {
       parent_id: tapAndHold.lastInsertRowid ? Number(tapAndHold.lastInsertRowid) : undefined,
       required_repetitions: 6,
       gesture: "tap-and-hold-4-fingers",
-      explanation_video_path: "/videos/tap-and-hold-4-fingers.mp4"
+      explanation_video_path: "/videos/tap_and_hold_(4_finger).webm"
     }
   ])
 
@@ -221,7 +223,7 @@ export default async function seed() {
       parent_id: singleSwipe.lastInsertRowid ? Number(singleSwipe.lastInsertRowid) : undefined,
       required_repetitions: 6,
       gesture: "single-swipe-3-fingers",
-      explanation_video_path: "/videos/single-swipe-3-fingers.mp4"
+      explanation_video_path: "/videos/single_swipe_(3_finger).webm"
     },
     {
       title: "Single Swipe (4 Finger)",
@@ -229,7 +231,7 @@ export default async function seed() {
       parent_id: singleSwipe.lastInsertRowid ? Number(singleSwipe.lastInsertRowid) : undefined,
       required_repetitions: 6,
       gesture: "single-swipe-4-fingers",
-      explanation_video_path: "/videos/single-swipe-4-fingers.mp4"
+      explanation_video_path: "/videos/single_swipe_(4_finger).webm"
     }
   ])
 
@@ -245,7 +247,7 @@ export default async function seed() {
       parent_id: pinchSwipe.lastInsertRowid ? Number(pinchSwipe.lastInsertRowid) : undefined,
       required_repetitions: 6,
       gesture: "pinch-swipe-3-fingers",
-      explanation_video_path: "/videos/pinch-swipe-3-fingers.mp4"
+      explanation_video_path: "/videos/pinch_swipe_(3_finger).webm"
     },
     {
       title: "Pinch Swipe (4 Finger)",
@@ -253,7 +255,7 @@ export default async function seed() {
       parent_id: pinchSwipe.lastInsertRowid ? Number(pinchSwipe.lastInsertRowid) : undefined,
       required_repetitions: 6,
       gesture: "pinch-swipe-4-fingers",
-      explanation_video_path: "/videos/pinch-swipe-4-fingers.mp4"
+      explanation_video_path: "/videos/pinch_swipe_(4_finger).webm"
     }
   ])
 
@@ -269,7 +271,7 @@ export default async function seed() {
       parent_id: spreadSwipe.lastInsertRowid ? Number(spreadSwipe.lastInsertRowid) : undefined,
       required_repetitions: 6,
       gesture: "spread-swipe-3-fingers",
-      explanation_video_path: "/videos/spread-swipe-3-fingers.mp4"
+      explanation_video_path: "/videos/spread_swipe_(3_finger).webm"
     },
     {
       title: "Spread Swipe (4 Finger)",
@@ -277,7 +279,7 @@ export default async function seed() {
       parent_id: spreadSwipe.lastInsertRowid ? Number(spreadSwipe.lastInsertRowid) : undefined,
       required_repetitions: 6,
       gesture: "spread-swipe-4-fingers",
-      explanation_video_path: "/videos/spread-swipe-4-fingers.mp4"
+      explanation_video_path: "/videos/spread_swipe_(4_finger).webm"
     }
   ])
 
@@ -292,21 +294,21 @@ export default async function seed() {
       description: "In diesem Szenario wird ein Bild aus einer Liste ausgewählt und vergrößert.",
       parent_id: scenarios.lastInsertRowid ? Number(scenarios.lastInsertRowid) : undefined,
       required_repetitions: 1,
-      explanation_video_path: "/videos/scenario-picture-zoom-intro.mp4"
+      explanation_video_path: "/videos/bild_vergrößern.webm"
     },
     {
       title: "Dateien kopieren",
       description: "In diesem Szenario werden Dateien von einem Ordner in einen anderen kopiert.",
       parent_id: scenarios.lastInsertRowid ? Number(scenarios.lastInsertRowid) : undefined,
       required_repetitions: 1,
-      explanation_video_path: "/videos/scenario-copy-files-intro.mp4"
+      explanation_video_path: "/videos/dateien_kopieren.webm"
     },
     {
       title: "Musik Vorschau",
       description: "In diesem Szenario wird durch eine Liste von Musiktiteln gescrollt und eine Vorschau abgespielt.",
       parent_id: scenarios.lastInsertRowid ? Number(scenarios.lastInsertRowid) : undefined,
       required_repetitions: 1,
-      explanation_video_path: "/videos/scenario-music-preview-intro.mp4"
+      explanation_video_path: "/videos/musik_vorschau.webm"
     }
   ])
 }
