@@ -23,12 +23,6 @@ export const POST: APIRoute = async ({ request })  => {
   const parentTask = selectedParentTask.peek()
   const childTask = selectedChildTask.peek()
 
-  console.log("Received file:", file.name, file.size, "bytes");
-  console.log("Current recording task ID:", currentRecording);
-  console.log("Participant ID:", participantId);
-  console.log("Parent Task ID:", parentTask);
-  console.log("Child Task ID:", childTask);
-
   const taskToSearch = childTask ?? parentTask
   const task = await db.select().from(recordingTask).where(eq(recordingTask.id, taskToSearch!)).limit(1).get()
 

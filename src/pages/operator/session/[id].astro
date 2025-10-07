@@ -3,10 +3,16 @@ import MainLayout from "../../../layouts/MainLayout.astro";
 import {TaskSelector} from "../../../components/tasks/TaskSelector.tsx";
 import {db, eq, session, sessionTask, recordingTask, isNull, asc} from "astro:db";
 import {GESTURE_HIERARCHY, GESTURE_NAME_LIST} from "../../../lib/constants.ts";
-import {selectedParentTask, selectedChildTask} from "../../../lib/state.ts";
+import {selectedParentTask, selectedChildTask, activeSessionId} from "../../../lib/state.ts";
 import {getRecordingTasksForSession} from "../../../lib/data.ts";
 import InputButtons from "../../../components/input/InputButtons.astro";
 const {id} = Astro.params;
+
+if(activeSessionId.peek() !== id) {
+  selectedParentTask.value = null
+  selectedChildTask.value = null
+  activeSessionId.value = id!
+}
 
 const {session, experiments} = await getRecordingTasksForSession(id)
 ---
