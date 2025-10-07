@@ -20,6 +20,7 @@ export const GET: APIRoute = ({request}) => {
   const effectsToCancel = new Set<() => void>()
   const encoder = new TextEncoder()
 
+  console.log(`Participant ${id} connecting...`)
   const stream = new ReadableStream({
     start(controller) {
       console.log(`Participant ${id} connected`)

@@ -5,7 +5,12 @@ import {activeSessionId, connectedParticipant} from "../../lib/state.ts";
 export const POST: APIRoute = async () => {
   const sessionId = crypto.randomUUID()
 
-  await startSession(sessionId, connectedParticipant.value)
+  const participantId = connectedParticipant.value
+  if(!participantId) {
+    return new Response("No participant connected", { status: 400 })
+  }
+
+  await startSession(sessionId, participantId)
   activeSessionId.value = sessionId
 
   const newUrl = "/operator/session/" + sessionId

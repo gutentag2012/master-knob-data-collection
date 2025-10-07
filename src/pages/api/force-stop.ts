@@ -2,10 +2,7 @@ import fs from "fs";
 import path from "path";
 import type {APIRoute} from "astro";
 import {
-  connectedParticipant,
   currentSessionRecordingTaskId,
-  selectedChildTask,
-  selectedParentTask
 } from "../../lib/state.ts";
 import {db, eq, recordingTask} from "astro:db";
 import {stopRecordingTask} from "../../lib/actions.ts";

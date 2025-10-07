@@ -7,7 +7,7 @@ import {
   selectedChildTask,
   selectedParentTask
 } from "../../lib/state.ts";
-import {db, eq, recordingTask} from "astro:db";
+import {db, eq, recordingTask, session, sessionTask} from "astro:db";
 import {stopRecordingTask} from "../../lib/actions.ts";
 
 export const POST: APIRoute = async ({ request })  => {
@@ -19,9 +19,21 @@ export const POST: APIRoute = async ({ request })  => {
   }
 
   const currentRecording = currentSessionRecordingTaskId.peek()
-  const participantId = connectedParticipant.peek()
+  let participantId = connectedParticipant.peek()
   const parentTask = selectedParentTask.peek()
   const childTask = selectedChildTask.peek()
+
+  if(!participantId) {
+    if(!currentRecording) {
+      return new Response("No participant connected and no active recording task", { status: 400 });
+    }
+    const currentRecordingTask = await db.select().from(sessionTask).leftJoin(session, eq(sessionTask.session_id, session.id)).where(eq(sessionTask.id, currentRecording)).limit(1).get()
+    participantId = currentRecordingTask?.session?.participant_id || null
+  }
+
+  if(!participantId) {
+    return new Response("No participant connected", { status: 400 });
+  }
 
   console.log("Received file:", file.name, file.size, "bytes");
   console.log("Current recording task ID:", currentRecording);

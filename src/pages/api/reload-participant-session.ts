@@ -1,6 +1,5 @@
 import type {APIRoute} from "astro";
-import {createParticipant, startSession} from "../../lib/actions.ts";
-import {activeSessionId, connectedParticipant} from "../../lib/state.ts";
+import {activeSessionId} from "../../lib/state.ts";
 
 export const GET: APIRoute = async () => {
   const newUrl = "/participant/session/" + activeSessionId.peek()

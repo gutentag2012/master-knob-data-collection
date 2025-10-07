@@ -32,6 +32,10 @@ if(!selectedChild) {
 if(!currentRecording) {
   currentSessionRecordingTaskId.value = await startRecordingTask(sessionId, selectedChild);
   console.log("Started recording task", currentSessionRecordingTaskId.value);
+} else {
+  await stopRecordingTask(currentRecording, "");
+  currentSessionRecordingTaskId.value = null;
+  console.log("Stopped recording task", currentRecording);
 }
 ---
 <InputButtons id={sessionId} />

@@ -364,7 +364,7 @@ export default async function seed() {
         : undefined,
       required_repetitions: 6,
       gesture: "knob-turn-3-fingers",
-      explanation_video_path: "/videos/knob_turn_(3_finger).webm",
+      explanation_video_path: "/videos/knob_turn_(3_fingers).webm",
     },
     {
       title: "Knob Turn (All Fingers)",
@@ -375,7 +375,7 @@ export default async function seed() {
         : undefined,
       required_repetitions: 6,
       gesture: "knob-turn-all-fingers",
-      explanation_video_path: "/videos/knob_turn_(all_finger).webm",
+      explanation_video_path: "/videos/knob_turn_(all_fingers).webm",
     },
     {
       title: "Knob Press (No Fingers)",
@@ -386,7 +386,7 @@ export default async function seed() {
         : undefined,
       required_repetitions: 6,
       gesture: "knob-press-no-fingers",
-      explanation_video_path: "/videos/knob_press_(no_finger).webm",
+      explanation_video_path: "/videos/knob_press_(no_fingers).webm",
     },
     {
       title: "Knob Press (4 Fingers)",
@@ -397,7 +397,7 @@ export default async function seed() {
         : undefined,
       required_repetitions: 6,
       gesture: "knob-press-4-fingers",
-      explanation_video_path: "/videos/knob_press_(4_finger).webm",
+      explanation_video_path: "/videos/knob_press_(4_fingers).webm",
     },
     {
       title: "Lay On (2 Fingers)",
@@ -408,7 +408,7 @@ export default async function seed() {
         : undefined,
       required_repetitions: 6,
       gesture: "lay-on-2-fingers",
-      explanation_video_path: "/videos/lay_on_(2_finger).webm",
+      explanation_video_path: "/videos/lay_on_(2_fingers).webm",
     },
     {
       title: "Lay On (3 Fingers)",
@@ -419,29 +419,29 @@ export default async function seed() {
         : undefined,
       required_repetitions: 6,
       gesture: "lay-on-3-fingers",
-      explanation_video_path: "/videos/lay_on_(3_finger).webm",
+      explanation_video_path: "/videos/lay_on_(3_fingers).webm",
     },
-    {
-      title: "Lay Off (All Fingers)",
-      description:
-        "Hier ruhen alle Finger (Daumen, Zeige-, Mittel-, Ring- und kleiner Finger) bei Start auf dem Knopf. Die Hand wird abgenommen.",
-      parent_id: noGesture.lastInsertRowid
-        ? Number(noGesture.lastInsertRowid)
-        : undefined,
-      required_repetitions: 6,
-      gesture: "lay-off-all-fingers",
-      explanation_video_path: "/videos/lay_off_(all_finger).webm",
-    },
-    {
-      title: "Lay Off (4 Fingers)",
-      description:
-        "Hier ruhen 4 Finger (Daumen, Zeige-, Mittel-, Ring-Finger) bei Start auf dem Knopf. Die Hand wird abgenommen.",
-      parent_id: noGesture.lastInsertRowid
-        ? Number(noGesture.lastInsertRowid)
-        : undefined,
-      required_repetitions: 6,
-      gesture: "lay-off-4-fingers",
-      explanation_video_path: "/videos/lay_off_(4_finger).webm",
-    },
+    // {
+    //   title: "Lay Off (All Fingers)",
+    //   description:
+    //     "Hier ruhen alle Finger (Daumen, Zeige-, Mittel-, Ring- und kleiner Finger) bei Start auf dem Knopf. Die Hand wird abgenommen.",
+    //   parent_id: noGesture.lastInsertRowid
+    //     ? Number(noGesture.lastInsertRowid)
+    //     : undefined,
+    //   required_repetitions: 6,
+    //   gesture: "lay-off-all-fingers",
+    //   explanation_video_path: "/videos/lay_off_(all_finger).webm",
+    // },
+    // {
+    //   title: "Lay Off (4 Fingers)",
+    //   description:
+    //     "Hier ruhen 4 Finger (Daumen, Zeige-, Mittel-, Ring-Finger) bei Start auf dem Knopf. Die Hand wird abgenommen.",
+    //   parent_id: noGesture.lastInsertRowid
+    //     ? Number(noGesture.lastInsertRowid)
+    //     : undefined,
+    //   required_repetitions: 6,
+    //   gesture: "lay-off-4-fingers",
+    //   explanation_video_path: "/videos/lay_off_(4_finger).webm",
+    // },
   ]);
 }

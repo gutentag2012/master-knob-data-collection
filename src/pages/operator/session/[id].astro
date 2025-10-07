@@ -136,6 +136,10 @@ const {session, experiments} = await getRecordingTasksForSession(id)
       mediaRecorder.stop();
       console.log("Recording stopping...");
 
+      await fetch("/api/force-stop", {
+        method: "POST",
+      });
+
       const toggleButton = document.getElementById("toggle-recording-btn");
       if (toggleButton) {
         toggleButton.removeAttribute("hx-disable")
