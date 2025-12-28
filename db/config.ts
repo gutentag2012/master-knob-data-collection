@@ -61,6 +61,8 @@ const sensorData = defineTable({
     id: column.text({primaryKey: true}),
     session_task_id: column.text({references: () => sessionTask.columns.id}),
     timestamp: column.date({default: NOW}),
+    timestamp_ms: column.number({default: sql`EXTRACT(EPOCH FROM NOW()) * 1000`}),
+    timestamp_ms_string: column.text({default: sql`strftime('%s', 'now')`}),
     motor_angle: column.number({optional: true}),
     motor_angle_delta: column.number({optional: true}),
     motor_snap_point: column.number({optional: true}),
